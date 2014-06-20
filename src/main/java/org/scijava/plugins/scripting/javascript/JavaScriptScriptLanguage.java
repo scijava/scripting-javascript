@@ -34,6 +34,7 @@ package org.scijava.plugins.scripting.javascript;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
@@ -56,6 +57,23 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 
 	public JavaScriptScriptLanguage() {
 		super("javascript");
+	}
+
+	@Override
+	public ScriptEngine getScriptEngine() {
+		final ScriptEngine engine = super.getScriptEngine();
+		try {
+			engine.eval("function load(path) {\n"
+					+ "  importClass(Packages.sun.org.mozilla.javascript.internal.Context);\n"
+					+ "  importClass(Packages.java.io.FileReader);\n"
+					+ "  var cx = Context.getCurrentContext();\n"
+					+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"
+					+ "}");
+		}
+		catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		return engine;
 	}
 
 	@Override
