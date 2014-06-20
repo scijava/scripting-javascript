@@ -35,7 +35,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.concurrent.ExecutionException;
 
 import javax.script.Bindings;
@@ -109,4 +112,18 @@ public class JavaScriptTest {
 		assertEquals(expected, result);
 	}
 
+	@Test
+	public void testLoad() throws IOException, InterruptedException, ExecutionException, ScriptException {
+		final File tmp = File.createTempFile("js-lib-", ".js");
+		final Writer writer = new FileWriter(tmp);
+		writer.write("function three() { return 4; }");
+		writer.close();
+
+		final Context context = new Context(ScriptService.class);
+		final ScriptService scriptService = context.getService(ScriptService.class);
+		final String script = "load('" + tmp.getPath() + "'); three();";
+		final Object result = scriptService.run("three.js", script, false).get().getReturnValue();
+		assertEquals(4.0, (Number) result);
+		assertTrue(tmp.delete());
+	}
 }
