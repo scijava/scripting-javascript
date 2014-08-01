@@ -44,7 +44,7 @@ import org.scijava.script.ScriptLanguage;
 import org.scijava.util.ClassUtils;
 
 /**
- * An adapter of the JavaScript interpreter to ImageJ's scripting interfaces.
+ * An adapter of the JavaScript interpreter to the SciJava scripting interface.
  * 
  * @author Curtis Rueden
  * @see ScriptEngine
