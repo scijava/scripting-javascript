@@ -49,7 +49,7 @@ import org.scijava.util.ClassUtils;
  * @author Curtis Rueden
  * @see ScriptEngine
  */
-@Plugin(type = ScriptLanguage.class)
+@Plugin(type = ScriptLanguage.class, name = "JavaScript")
 public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 
 	@Parameter
