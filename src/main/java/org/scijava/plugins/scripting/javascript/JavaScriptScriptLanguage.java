@@ -112,10 +112,4 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 		return null;
 	}
 
-	@Override
-	public String getLanguageName() {
-		// NB: Must override, or else the name is "ECMAScript".
-		return "JavaScript";
-	}
-
 }
