@@ -1,4 +1,4 @@
-![](http://jenkins.imagej.net/job/scripting-JavaScript/lastBuild/badge/icon)
+[![](http://jenkins.imagej.net/job/scripting-JavaScript/lastBuild/badge/icon)](http://jenkins.imagej.net/job/scripting-JavaScript/)
 
 # JavaScript Scripting
 
