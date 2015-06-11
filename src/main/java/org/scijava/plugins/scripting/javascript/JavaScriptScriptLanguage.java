@@ -85,12 +85,19 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 	public ScriptEngine getScriptEngine() {
 		final ScriptEngine engine = super.getScriptEngine();
 		try {
-			engine.eval("function load(path) {\n"
-					+ "  importClass(Packages." + contextClass(engine) + ");\n"
-					+ "  importClass(Packages.java.io.FileReader);\n"
-					+ "  var cx = Context.getCurrentContext();\n"
-					+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"
-					+ "}");
+			if (isNashorn()) {
+				// for Rhino compatibility, importClass and importPackage in particular
+				engine.eval("load(\"nashorn:mozilla_compat.js\");");
+			}
+			if (isRhino()) {
+				// for the load function, which is somehow otherwise unavailable (?)
+				engine.eval("function load(path) {\n"
+						+ "  importClass(Packages." + contextClass(engine) + ");\n"
+						+ "  importClass(Packages.java.io.FileReader);\n"
+						+ "  var cx = Context.getCurrentContext();\n"
+						+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"
+						+ "}");
+			}
 		}
 		catch (ScriptException e) {
 			e.printStackTrace();
