@@ -59,6 +59,28 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 		super("javascript");
 	}
 
+	// -- JavaScriptScriptLanguage methods --
+
+	/**
+	 * Returns true iff this script language is using the <a
+	 * href="http://openjdk.java.net/projects/nashorn/">Nashorn</a> JavaScript
+	 * engine. This is the case for Java 8.
+	 */
+	public boolean isNashorn() {
+		return getEngineName().contains("Nashorn");
+	}
+
+	/**
+	 * Returns true iff this script language is using the <a
+	 * href="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino"
+	 * >Rhino</a> JavaScript engine. This is the case for Java 6 and Java 7.
+	 */
+	public boolean isRhino() {
+		return getEngineName().contains("Rhino");
+	}
+
+	// -- ScriptEngineFactory methods --
+
 	@Override
 	public ScriptEngine getScriptEngine() {
 		final ScriptEngine engine = super.getScriptEngine();
