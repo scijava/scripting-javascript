@@ -125,6 +125,22 @@ public class JavaScriptTest {
 		assertTrue(tmp.delete());
 	}
 
+	@Test
+	public void testJavaAPI() throws InterruptedException, ExecutionException,
+		IOException, ScriptException
+	{
+		final Context context = new Context(ScriptService.class);
+		final ScriptService scriptService = context.getService(ScriptService.class);
+		final String script = //
+			"importClass(Packages.java.util.ArrayList);\n" //
+				+ "var list = new ArrayList();\n" //
+				+ "list.add(3);\n" //
+				+ "list.add(5.5);\n" //
+				+ "list.add(7);\n" //
+				+ "list.get(1);\n";
+		assertResult(5.5, scriptService.run("javaAPI.js", script, true).get());
+	}
+
 	// -- Helper methods --
 
 	private void assertResult(final double expected, final ScriptModule m) {
