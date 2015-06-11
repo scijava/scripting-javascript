@@ -64,7 +64,7 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 		final ScriptEngine engine = super.getScriptEngine();
 		try {
 			engine.eval("function load(path) {\n"
-					+ "  importClass(Packages.sun.org.mozilla.javascript.internal.Context);\n"
+					+ "  importClass(Packages.org.mozilla.javascript.Context);\n"
 					+ "  importClass(Packages.java.io.FileReader);\n"
 					+ "  var cx = Context.getCurrentContext();\n"
 					+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"

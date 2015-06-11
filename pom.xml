@@ -17,6 +17,10 @@
 	<url>http://scijava.org/</url>
 	<inceptionYear>2008</inceptionYear>
 
+	<properties>
+		<scijava.jvm.version>1.8</scijava.jvm.version>
+	</properties>
+
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
