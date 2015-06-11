@@ -86,7 +86,7 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 		final ScriptEngine engine = super.getScriptEngine();
 		try {
 			engine.eval("function load(path) {\n"
-					+ "  importClass(Packages.sun.org.mozilla.javascript.internal.Context);\n"
+					+ "  importClass(Packages." + contextClass(engine) + ");\n"
 					+ "  importClass(Packages.java.io.FileReader);\n"
 					+ "  var cx = Context.getCurrentContext();\n"
 					+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"
@@ -132,6 +132,26 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 			log.warn(exc);
 		}
 		return null;
+	}
+
+	// -- Helper methods --
+
+	private String contextClass(final ScriptEngine engine) {
+		if (isNashorn()) return "jdk.nashorn.internal.runtime.Context";
+
+		final String engineClassName = engine.getClass().getName();
+
+		if (isRhino()) {
+			if (engineClassName.startsWith("com.sun.")) {
+				// assume JDK-flavored Rhino script engine
+				return "sun.org.mozilla.javascript.internal.Context";
+			}
+			// assume vanilla Mozilla-flavored Rhino script engine
+			return "org.mozilla.javascript.Context";
+		}
+
+		throw new UnsupportedOperationException("Unknown JavaScript flavor: " +
+			engineClassName);
 	}
 
 }
