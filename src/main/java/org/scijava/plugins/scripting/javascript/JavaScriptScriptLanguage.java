@@ -91,15 +91,15 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 			}
 			if (isRhino()) {
 				// for the load function, which is somehow otherwise unavailable (?)
-				engine.eval("function load(path) {\n"
-						+ "  importClass(Packages." + contextClass(engine) + ");\n"
-						+ "  importClass(Packages.java.io.FileReader);\n"
-						+ "  var cx = Context.getCurrentContext();\n"
-						+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"
-						+ "}");
+				engine.eval("function load(path) {\n" +
+					"  importClass(Packages." + contextClass(engine) + ");\n" +
+					"  importClass(Packages.java.io.FileReader);\n" +
+					"  var cx = Context.getCurrentContext();\n" +
+					"  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n" +
+					"}");
 			}
 		}
-		catch (ScriptException e) {
+		catch (final ScriptException e) {
 			e.printStackTrace();
 		}
 		return engine;
