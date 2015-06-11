@@ -67,10 +67,7 @@ public class JavaScriptTest {
 		final Context context = new Context(ScriptService.class);
 		final ScriptService scriptService = context.getService(ScriptService.class);
 		final String script = "$x = 1 + 2;";
-		// NB: Some JVMs return Integer, others Double. Let's be careful here.
-		final ScriptModule m = scriptService.run("add.js", script, true).get();
-		final Number result = (Number) m.getReturnValue();
-		assertEquals(3.0, result.doubleValue(), 0.0);
+		assertResult(3.0, scriptService.run("add.js", script, true).get());
 	}
 
 	@Test
@@ -80,7 +77,9 @@ public class JavaScriptTest {
 
 		final ScriptLanguage language = scriptService.getLanguageByExtension("js");
 		final ScriptEngine engine = language.getScriptEngine();
-		assertTrue(engine.getClass().getName().endsWith(".RhinoScriptEngine"));
+		final String engineClassName = engine.getClass().getName();
+		assertTrue(engineClassName.endsWith(".RhinoScriptEngine") ||
+			engineClassName.endsWith(".NashornScriptEngine"));
 		engine.put("$hello", 17);
 		assertEquals("17", engine.eval("$hello").toString());
 		assertEquals("17", engine.get("$hello").toString());
@@ -122,8 +121,32 @@ public class JavaScriptTest {
 		final Context context = new Context(ScriptService.class);
 		final ScriptService scriptService = context.getService(ScriptService.class);
 		final String script = "load('" + tmp.getPath() + "'); three();";
-		final Object result = scriptService.run("three.js", script, false).get().getReturnValue();
-		assertEquals(4.0, (Number) result);
+		assertResult(4.0, scriptService.run("three.js", script, false).get());
 		assertTrue(tmp.delete());
 	}
+
+	@Test
+	public void testJavaAPI() throws InterruptedException, ExecutionException,
+		IOException, ScriptException
+	{
+		final Context context = new Context(ScriptService.class);
+		final ScriptService scriptService = context.getService(ScriptService.class);
+		final String script = //
+			"importClass(Packages.java.util.ArrayList);\n" //
+				+ "var list = new ArrayList();\n" //
+				+ "list.add(3);\n" //
+				+ "list.add(5.5);\n" //
+				+ "list.add(7);\n" //
+				+ "list.get(1);\n";
+		assertResult(5.5, scriptService.run("javaAPI.js", script, true).get());
+	}
+
+	// -- Helper methods --
+
+	private void assertResult(final double expected, final ScriptModule m) {
+		// NB: Some JVMs return Integer, others Double. Let's be careful here.
+		final Number result = (Number) m.getReturnValue();
+		assertEquals(expected, result.doubleValue(), 0.0);
+	}
+
 }

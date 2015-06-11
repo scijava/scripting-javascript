@@ -59,18 +59,47 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 		super("javascript");
 	}
 
+	// -- JavaScriptScriptLanguage methods --
+
+	/**
+	 * Returns true iff this script language is using the <a
+	 * href="http://openjdk.java.net/projects/nashorn/">Nashorn</a> JavaScript
+	 * engine. This is the case for Java 8.
+	 */
+	public boolean isNashorn() {
+		return getEngineName().contains("Nashorn");
+	}
+
+	/**
+	 * Returns true iff this script language is using the <a
+	 * href="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino"
+	 * >Rhino</a> JavaScript engine. This is the case for Java 6 and Java 7.
+	 */
+	public boolean isRhino() {
+		return getEngineName().contains("Rhino");
+	}
+
+	// -- ScriptEngineFactory methods --
+
 	@Override
 	public ScriptEngine getScriptEngine() {
 		final ScriptEngine engine = super.getScriptEngine();
 		try {
-			engine.eval("function load(path) {\n"
-					+ "  importClass(Packages.sun.org.mozilla.javascript.internal.Context);\n"
-					+ "  importClass(Packages.java.io.FileReader);\n"
-					+ "  var cx = Context.getCurrentContext();\n"
-					+ "  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n"
-					+ "}");
+			if (isNashorn()) {
+				// for Rhino compatibility, importClass and importPackage in particular
+				engine.eval("load(\"nashorn:mozilla_compat.js\");");
+			}
+			if (isRhino()) {
+				// for the load function, which is somehow otherwise unavailable (?)
+				engine.eval("function load(path) {\n" +
+					"  importClass(Packages." + contextClass(engine) + ");\n" +
+					"  importClass(Packages.java.io.FileReader);\n" +
+					"  var cx = Context.getCurrentContext();\n" +
+					"  cx.evaluateReader(this, new FileReader(path), path, 1, null);\n" +
+					"}");
+			}
 		}
-		catch (ScriptException e) {
+		catch (final ScriptException e) {
 			e.printStackTrace();
 		}
 		return engine;
@@ -110,6 +139,26 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 			log.warn(exc);
 		}
 		return null;
+	}
+
+	// -- Helper methods --
+
+	private String contextClass(final ScriptEngine engine) {
+		if (isNashorn()) return "jdk.nashorn.internal.runtime.Context";
+
+		final String engineClassName = engine.getClass().getName();
+
+		if (isRhino()) {
+			if (engineClassName.startsWith("com.sun.")) {
+				// assume JDK-flavored Rhino script engine
+				return "sun.org.mozilla.javascript.internal.Context";
+			}
+			// assume vanilla Mozilla-flavored Rhino script engine
+			return "org.mozilla.javascript.Context";
+		}
+
+		throw new UnsupportedOperationException("Unknown JavaScript flavor: " +
+			engineClassName);
 	}
 
 }
