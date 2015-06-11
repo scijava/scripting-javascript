@@ -67,10 +67,7 @@ public class JavaScriptTest {
 		final Context context = new Context(ScriptService.class);
 		final ScriptService scriptService = context.getService(ScriptService.class);
 		final String script = "$x = 1 + 2;";
-		// NB: Some JVMs return Integer, others Double. Let's be careful here.
-		final ScriptModule m = scriptService.run("add.js", script, true).get();
-		final Number result = (Number) m.getReturnValue();
-		assertEquals(3.0, result.doubleValue(), 0.0);
+		assertResult(3.0, scriptService.run("add.js", script, true).get());
 	}
 
 	@Test
@@ -122,10 +119,16 @@ public class JavaScriptTest {
 		final Context context = new Context(ScriptService.class);
 		final ScriptService scriptService = context.getService(ScriptService.class);
 		final String script = "load('" + tmp.getPath() + "'); three();";
-		// NB: Some JVMs return Integer, others Double. Let's be careful here.
-		final ScriptModule m = scriptService.run("three.js", script, false).get();
-		final Number result = (Number) m.getReturnValue();
-		assertEquals(4.0, result.doubleValue(), 0.0);
+		assertResult(4.0, scriptService.run("three.js", script, false).get());
 		assertTrue(tmp.delete());
 	}
+
+	// -- Helper methods --
+
+	private void assertResult(final double expected, final ScriptModule m) {
+		// NB: Some JVMs return Integer, others Double. Let's be careful here.
+		final Number result = (Number) m.getReturnValue();
+		assertEquals(expected, result.doubleValue(), 0.0);
+	}
+
 }
