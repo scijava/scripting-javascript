@@ -122,8 +122,10 @@ public class JavaScriptTest {
 		final Context context = new Context(ScriptService.class);
 		final ScriptService scriptService = context.getService(ScriptService.class);
 		final String script = "load('" + tmp.getPath() + "'); three();";
-		final Object result = scriptService.run("three.js", script, false).get().getReturnValue();
-		assertEquals(4.0, (Number) result);
+		// NB: Some JVMs return Integer, others Double. Let's be careful here.
+		final ScriptModule m = scriptService.run("three.js", script, false).get();
+		final Number result = (Number) m.getReturnValue();
+		assertEquals(4.0, result.doubleValue(), 0.0);
 		assertTrue(tmp.delete());
 	}
 }
