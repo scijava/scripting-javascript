@@ -77,7 +77,9 @@ public class JavaScriptTest {
 
 		final ScriptLanguage language = scriptService.getLanguageByExtension("js");
 		final ScriptEngine engine = language.getScriptEngine();
-		assertTrue(engine.getClass().getName().endsWith(".RhinoScriptEngine"));
+		final String engineClassName = engine.getClass().getName();
+		assertTrue(engineClassName.endsWith(".RhinoScriptEngine") ||
+			engineClassName.endsWith(".NashornScriptEngine"));
 		engine.put("$hello", 17);
 		assertEquals("17", engine.eval("$hello").toString());
 		assertEquals("17", engine.get("$hello").toString());
