@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>scripting-javascript</artifactId>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.4.2-SNAPSHOT</version>
 
 	<name>SciJava Scripting: JavaScript</name>
 	<description>JSR-223-compliant JavaScript scripting language plugin.</description>
