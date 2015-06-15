@@ -48,7 +48,6 @@ import javax.script.ScriptException;
 
 import org.junit.Test;
 import org.scijava.Context;
-import org.scijava.script.AbstractScriptLanguageTest;
 import org.scijava.script.ScriptLanguage;
 import org.scijava.script.ScriptModule;
 import org.scijava.script.ScriptService;
@@ -59,12 +58,7 @@ import org.scijava.script.ScriptService;
  * @author Johannes Schindelin
  * @author Curtis Rueden
  */
-public class JavaScriptTest extends AbstractScriptLanguageTest {
-
-	@Test
-	public void testDiscovery() {
-		assertDiscovered(JavaScriptScriptLanguage.class);
-	}
+public class JavaScriptTest {
 
 	@Test
 	public void testBasic() throws InterruptedException, ExecutionException,
