@@ -79,6 +79,12 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 		return getEngineName().contains("Rhino");
 	}
 
+	/** Returns true iff the JVM appears to be the OpenJDK version of Java. */
+	public boolean isOpenJDK() {
+		final String vmName = System.getProperty("java.vm.name");
+		return vmName != null && vmName.startsWith("OpenJDK");
+	}
+
 	// -- ScriptEngineFactory methods --
 
 	@Override
