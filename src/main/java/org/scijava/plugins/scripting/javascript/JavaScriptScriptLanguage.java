@@ -156,8 +156,13 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 
 		if (isRhino()) {
 			if (engineClassName.startsWith("com.sun.")) {
-				// assume JDK-flavored Rhino script engine
-				return "sun.org.mozilla.javascript.internal.Context";
+				if (isOpenJDK()) {
+					return "sun.org.mozilla.javascript.Context";
+				}
+				else {
+					// assume Oracle version of Java
+					return "sun.org.mozilla.javascript.internal.Context";
+				}
 			}
 			// assume vanilla Mozilla-flavored Rhino script engine
 			return "org.mozilla.javascript.Context";
