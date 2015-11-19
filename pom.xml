@@ -16,7 +16,6 @@
 	<description>JSR-223-compliant JavaScript scripting language plugin.</description>
 	<url>http://scijava.org/</url>
 	<inceptionYear>2008</inceptionYear>
-
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
@@ -69,12 +68,10 @@
 		<tag>HEAD</tag>
 		<url>https://github.com/scijava/scripting-javascript</url>
 	</scm>
-
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/scijava/scripting-javascript/issues</url>
 	</issueManagement>
-
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>http://jenkins.imagej.net/job/scripting-JavaScript/</url>
@@ -119,5 +116,4 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
