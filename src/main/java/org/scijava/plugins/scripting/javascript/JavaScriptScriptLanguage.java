@@ -47,6 +47,7 @@ import org.scijava.util.ClassUtils;
  * An adapter of the JavaScript interpreter to the SciJava scripting interface.
  * 
  * @author Curtis Rueden
+ * @author Ulrik Guenther
  * @see ScriptEngine
  */
 @Plugin(type = ScriptLanguage.class, name = "JavaScript")
@@ -54,6 +55,15 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 
 	@Parameter
 	private LogService log;
+
+	static {
+		// GraalVM's Graal.js needs Nashorn compatibility activated explicitly and we need
+		// that to get importPackage, etc. One way to activate this is to set a system property,
+		// which is done here in case we are running on GraalVM.
+		if (System.getProperty("java.vm.name").contains("GraalVM")) {
+			System.setProperty("polyglot.js.nashorn-compat", "true");
+		}
+	}
 
 	public JavaScriptScriptLanguage() {
 		super("javascript");
@@ -77,6 +87,17 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 	 */
 	public boolean isRhino() {
 		return getEngineName().contains("Rhino");
+	}
+
+	/**
+	 * Returns true iff this script language is using the
+	 * <a href="https://github.com/graalvm/graaljs">Graal.js</a> scripting engine.
+	 * Also see <a href="https://github.com/graalvm/graaljs/blob/master/docs/user/NashornMigrationGuide.md">The
+	 * Nashorn migration guide</a>.
+	 * True for GraalVM.
+	 */
+	public boolean isGraalJS() {
+	  return getEngineName().contains("Graal.js");
 	}
 
 	/** Returns true iff the JVM appears to be the OpenJDK version of Java. */
@@ -150,6 +171,7 @@ public class JavaScriptScriptLanguage extends AdaptedScriptLanguage {
 	// -- Helper methods --
 
 	private String contextClass(final ScriptEngine engine) {
+		if (isGraalJS()) return "org.graalvm.polyglot.Context";
 		if (isNashorn()) return "jdk.nashorn.internal.runtime.Context";
 
 		final String engineClassName = engine.getClass().getName();
