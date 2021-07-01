@@ -1,4 +1,4 @@
-[![](https://travis-ci.org/scijava/scripting-javascript.svg?branch=master)](https://travis-ci.org/scijava/scripting-javascript)
+[![](https://github.com/scijava/scripting-javascript/actions/workflows/build-main.yml/badge.svg)](https://github.com/scijava/scripting-javascript/actions/workflows/build-main.yml)
 
 # JavaScript Scripting
 
