@@ -1,4 +1,4 @@
-[![](https://github.com/scijava/scripting-javascript/actions/workflows/build-main.yml/badge.svg)](https://github.com/scijava/scripting-javascript/actions/workflows/build-main.yml)
+[![Build Status](https://github.com/scijava/scripting-javascript/actions/workflows/build.yml/badge.svg)](https://github.com/scijava/scripting-javascript/actions/workflows/build.yml)
 
 # JavaScript Scripting
 
